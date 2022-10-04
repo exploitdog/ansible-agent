@@ -1,0 +1,26 @@
+---
+
+- name: Create the exploitdog_agent group
+  group:
+    name: "{{ _exploitdog_agent_system_group }}"
+    state: present
+    system: true
+  when: _exploitdog_agent_system_group != "root"
+
+- name: Create the exploitdog_agent user
+  user:
+    name: "{{ _exploitdog_agent_system_user }}"
+    groups: "{{ _exploitdog_agent_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+    home: /
+  when: _exploitdog_agent_system_user != "root"
+
+- name: Copy exploitdog_agent binary
+  copy:
+    src: bin/agent_linux_amd64
+    dest: "{{ _exploitdog_agent_binary_install_dir }}/exploitdog_agent"
+    mode: 0755
+  notify: "restart exploitdog_agent"

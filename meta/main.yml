@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: exploitdog
+  role_name: exploitdog_agent
+  description: ExploitDog Agent
+  license: MIT
+  company: ExploitDog, Inc.
+  min_ansible_version: 2.7
+  platforms:
+  galaxy_tags: [ ]
+
+dependencies: [ ]

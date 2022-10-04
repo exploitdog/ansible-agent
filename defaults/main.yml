@@ -1,0 +1,21 @@
+---
+_exploitdog_agent_binary_install_dir: "/usr/local/bin"
+_exploitdog_agent_system_group: "exploitdog-agent"
+_exploitdog_agent_system_user: "{{ _exploitdog_agent_system_group }}"
+
+_exploitdog_agent_systemd_service:
+  file: "/etc/systemd/system/exploitdog_agent.service"
+  mode: "0644"
+_exploitdog_agent_sysvinit_service:
+  file: "/etc/init.d/exploitdog_agent"
+  mode: "0755"
+_exploitdog_agent_upstart_service:
+  file: "/etc/init/exploitdog_agent.conf"
+  mode: "0644"
+
+exploitdog_agent_disabled_collectors: []
+exploitdog_agent_enabled_collectors: []
+exploitdog_agent_url: "https://exploitdog.com"
+exploitdog_agent_proxy: ~
+exploitdog_agent_token: ~
+exploitdog_agent_duration: "8h"
