@@ -2,7 +2,7 @@ on: push
 
 jobs:
   molecule:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -14,4 +14,4 @@ jobs:
         run: |
           echo "    exploitdog_agent_url: ${AGENT_URL}" >> ./exploitdog/ansible-agent/molecule/default/playbook.yml
           echo "    exploitdog_agent_token: ${AGENT_TOKEN}" >> ./exploitdog/ansible-agent/molecule/default/playbook.yml
-      - uses: robertdebock/molecule-action@4.0.9
+      - uses: robertdebock/molecule-action@5.0.0
