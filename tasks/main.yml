@@ -5,37 +5,39 @@
     - exploitdog_agent_configure
     - exploitdog_agent_run
 
+- import_tasks: uninstall.yml
+  become: true
+  when: uninstall|bool == true
+
 - import_tasks: install.yml
   become: true
   tags:
     - exploitdog_agent_install
+  when: uninstall == false
 
 - import_tasks: configure.yml
   become: true
   tags:
     - exploitdog_agent_configure
+  when: uninstall == false
 
-- name: Ensure ExplotDog agent service is enabled on boot
+- name: Ensure ExploitDog agent service is enabled on boot
   become: true
   service:
     name: exploitdog_agent
     enabled: true
     state: started
-  when: ansible_service_mgr != 'systemd' and not ansible_check_mode
+  when: ansible_service_mgr != 'systemd' and not ansible_check_mode and uninstall == false
   tags:
     - exploitdog_agent_run
 
-- name: Ensure ExplotDog agent systemd service is enabled on boot
+- name: Ensure ExploitDog agent systemd service is enabled on boot
   become: true
   systemd:
     daemon_reload: true
     name: exploitdog_agent
     enabled: true
     state: started
-  when: ansible_service_mgr == 'systemd' and not ansible_check_mode
+  when: ansible_service_mgr == 'systemd' and not ansible_check_mode and uninstall == false
   tags:
     - exploitdog_agent_run
-
-#- name: Restart everything
-#  command: echo "this task will restart the web services"
-#  notify: "restart exploitdog_agent"

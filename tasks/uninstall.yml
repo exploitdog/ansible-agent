@@ -1,0 +1,54 @@
+
+- name: Stop exploitdog_agent systemd service
+  become: true
+  systemd:
+    name: exploitdog_agent
+    state: stopped
+    enabled: no
+  when: ansible_service_mgr == 'systemd' and not ansible_check_mode
+
+- name: Stop exploitdog_agent service
+  become: true
+  service:
+    name: exploitdog_agent
+    state: stopped
+    enabled: no
+  when: ansible_service_mgr != 'systemd' and not ansible_check_mode
+
+- name: Delete service file
+  file:
+    state: absent
+    path: "{{ lookup('vars', '_exploitdog_agent_' + ansible_service_mgr + '_service').file }}"
+
+- name: Delete log
+  file:
+    state: absent
+    path: /var/log/exploitdog_agent
+
+- name: Delete db
+  file:
+    state: absent
+    path: /var/lib/exploitdog_agent
+
+- name: Delete config
+  file:
+    state: absent
+    path: /etc/exploitdog_agent
+
+- name: Delete exploitdog_agent binary
+  file:
+    state: absent
+    path: "{{ _exploitdog_agent_binary_install_dir }}/exploitdog_agent"
+
+# remove if user/group default, not renamed or not root
+- name: Create the exploitdog_agent group
+  group:
+    name: "{{ _exploitdog_agent_system_group }}"
+    state: absent
+  when: _exploitdog_agent_system_group == "exploitdog-agent"
+
+- name: Create the exploitdog_agent user
+  user:
+    name: "{{ _exploitdog_agent_system_user }}"
+    state: absent
+  when: _exploitdog_agent_system_user == "exploitdog-agent"

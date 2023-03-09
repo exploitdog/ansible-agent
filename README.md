@@ -13,12 +13,25 @@ below.
 | `exploitdog_agent_duration`            | "8h"                     | Frequency of data collection, '4h', '8h', '16h', '24h'                                                         |
 | `exploitdog_agent_enabled_collectors`  | []                       | List of additionally enabled collectors. It adds collectors to those enabled by default                        |
 | `exploitdog_agent_disabled_collectors` | []                       | List of disabled collectors.                                                                                   |
+| `exploitdog_agent_log_type`            | "file"                   | Log type: "stdout", "file"                                                                                     |
+| `exploitdog_agent_log_level`           | "info"                   | Log level: "debug", "info", "warning", "error"                                                                 |
+
+
+# Log:
+
+## stdout:
+ * `systemd` written in stdout > syslog in `SyslogIdentifier=exploitdog_agent`
+
+## file:
+
+Location: `/var/log/exploitdog_agent`.
+Default size of log file rotation is 5mb, directory can contain maximum 10 log files
 
 ## Collectors
 
 | Name          | Default Enabled | Description                          |
 |---------------|-----------------|--------------------------------------|
-| host-info     | ✔               | Host info, not recommended to unlock |
+| host-info     | ✔               | Host info, locked to disable         |
 | cpu           | ✔               | CPU info                             |
 | disk          | ✔               | Disk info                            |
 | memory        | ✔               | Memory info                          |
@@ -36,6 +49,12 @@ Use it in a playbook as follows:
 - hosts: all
   roles:
     - exploitdog.exploitdog_agent
+```
+
+### Uninstall agent
+
+```bash
+ansible-playbook -i ./inventory ./agent.yaml --extra-vars='uninstall=true'
 ```
 
 ## Local Testing

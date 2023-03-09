@@ -43,3 +43,21 @@ def test_user(host):
 def test_service(host):
     s = host.service("exploitdog_agent")
     assert s.is_running
+
+def test_config(host):
+    f = host.file("/etc/exploitdog_agent/config.json")
+    assert f.exists
+    assert f.user == "exploitdog-agent"
+    assert f.group == "exploitdog-agent"
+
+def test_dirs(host):
+    dirs = [
+        "/var/lib/exploitdog_agent",
+        "/var/log/exploitdog_agent"
+    ]
+    for file in dirs:
+        f = host.file(file)
+        assert f.exists
+        assert f.is_directory
+        assert f.user == "exploitdog-agent"
+        assert f.group == "exploitdog-agent"

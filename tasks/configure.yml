@@ -8,3 +8,12 @@
     group: root
     mode: "{{ lookup('vars', '_exploitdog_agent_' + ansible_service_mgr + '_service').mode }}"
   notify: "restart exploitdog_agent"
+
+- name: Copy config file
+  template:
+    src: "exploitdog_agent.config.j2"
+    dest: "/etc/exploitdog_agent/config.json"
+    owner: "{{ _exploitdog_agent_system_user }}"
+    group: "{{ _exploitdog_agent_system_group }}"
+    mode: 0640
+  notify: "restart exploitdog_agent"

@@ -18,6 +18,29 @@
     home: /
   when: _exploitdog_agent_system_user != "root"
 
+- name: Create log directory
+  file:
+    path: /var/log/exploitdog_agent
+    state: directory
+    owner: "{{ _exploitdog_agent_system_user }}"
+    group: "{{ _exploitdog_agent_system_group }}"
+    mode: 0711
+
+- name: Create db directory
+  file:
+    path: /var/lib/exploitdog_agent
+    state: directory
+    owner: "{{ _exploitdog_agent_system_user }}"
+    group: "{{ _exploitdog_agent_system_group }}"
+    mode: 0711
+
+- name: Create config directory
+  file:
+    path: /etc/exploitdog_agent
+    state: directory
+    group: "{{ _exploitdog_agent_system_group }}"
+    mode: 0751
+
 - name: Copy exploitdog_agent binary
   copy:
     src: bin/agent_linux_amd64
