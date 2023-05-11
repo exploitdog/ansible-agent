@@ -22,7 +22,7 @@
   when: ansible_service_mgr == 'systemd'
 
 - name: Get upstart version
-  command: initctl --version
+  command: /sbin/initctl --version
   changed_when: false
   check_mode: false
   register: __upstart_version
