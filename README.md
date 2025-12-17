@@ -15,6 +15,7 @@ below.
 | `exploitdog_agent_disabled_collectors` | []                       | List of disabled collectors.                                                                                   |
 | `exploitdog_agent_log_type`            | "file"                   | Log type: "stdout", "file"                                                                                     |
 | `exploitdog_agent_log_level`           | "info"                   | Log level: "debug", "info", "warning", "error"                                                                 |
+| `exploitdog_agent_root_privileges`     | false                    | Start exploitdog_agent with root privileges (required for audit collector)                                     |
 
 
 # Log:
@@ -29,15 +30,16 @@ Default size of log file rotation is 5mb, directory can contain maximum 10 log f
 
 ## Collectors
 
-| Name          | Default Enabled | Description                          |
-|---------------|-----------------|--------------------------------------|
-| host-info     | ✔               | Host info, locked to disable         |
-| cpu           | ✔               | CPU info                             |
-| disk          | ✔               | Disk info                            |
-| memory        | ✔               | Memory info                          |
-| net-interface | ✔               | Information about network interfaces |
-| net-port      | ✔               | information about open ports         |
-| package       | ✔               | Information about installed packages |
+| Name          | Default Enabled | Description                                                |
+|---------------|-----------------|------------------------------------------------------------|
+| host-info     | ✔               | Host info, locked to disable                               |
+| cpu           | ✔               | CPU info                                                   |
+| disk          | ✔               | Disk info                                                  |
+| memory        | ✔               | Memory info                                                |
+| net-interface | ✔               | Information about network interfaces                       |
+| net-port      | ✔               | information about open ports                               |
+| package       | ✔               | Information about installed packages                       |
+| audit         |                 | Audit, configuration assessment (requires root privileges) |
 
 ## Example
 

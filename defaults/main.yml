@@ -1,9 +1,6 @@
 ---
 uninstall: false
 _exploitdog_agent_binary_install_dir: "/usr/local/bin"
-_exploitdog_agent_system_group: "exploitdog-agent"
-_exploitdog_agent_system_user: "{{ _exploitdog_agent_system_group }}"
-
 _exploitdog_agent_systemd_service:
   file: "/etc/systemd/system/exploitdog_agent.service"
   mode: "0644"
@@ -22,3 +19,4 @@ exploitdog_agent_token: ~
 exploitdog_agent_duration: "8h"
 exploitdog_agent_log_type: "file"
 exploitdog_agent_log_level: "info"
+exploitdog_agent_root_privileges: false
