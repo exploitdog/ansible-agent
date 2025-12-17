@@ -5,47 +5,91 @@ driver:
   name: docker
 platforms:
   - name: bionic
-    pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:ubuntu-18.04
+    image: mpaivabarbosa/molecule-systemd-ubuntu:18.04
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
     privileged: true
+    pre_build_image: true
+    override_command: false
+    cgroupns_mode: host
+    security_opts:
+      - seccomp=unconfined
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
   - name: xenial
-    pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:ubuntu-16.04
+    image: mpaivabarbosa/molecule-systemd-ubuntu:20.04
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
     privileged: true
+    pre_build_image: true
+    override_command: false
+    cgroupns_mode: host
+    security_opts:
+      - seccomp=unconfined
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
   - name: stretch
-    pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:debian-9
+    image: mpaivabarbosa/molecule-systemd-debian:9
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
     privileged: true
+    pre_build_image: true
+    override_command: false
+    cgroupns_mode: host
+    security_opts:
+      - seccomp=unconfined
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
   - name: buster
-    pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:debian-10
+    image: mpaivabarbosa/molecule-systemd-debian:10
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  - name: centos7
     pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:centos-7
-    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
-    privileged: true
+    override_command: false
+    cgroupns_mode: host
+    security_opts:
+      - seccomp=unconfined
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
+#  - name: centos7
+#    image: mpaivabarbosa/molecule-systemd-centos:7
+#    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+#    privileged: true
+#    pre_build_image: true
+#    override_command: false
+#    cgroupns_mode: host
+#    security_opts:
+#      - seccomp=unconfined
+#    volumes:
+#      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+#    tmpfs:
+#      - /run
+#      - /tmp
+#    groups:
+#      - python3
   - name: centos8
-    pre_build_image: true
-    image: quay.io/paulfantom/molecule-systemd:centos-8
+    image: mpaivabarbosa/molecule-systemd-centos:8
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
     privileged: true
+    pre_build_image: true
+    override_command: false
+    cgroupns_mode: host
+    security_opts:
+      - seccomp=unconfined
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
     groups:
       - python3
 

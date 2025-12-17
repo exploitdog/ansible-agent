@@ -1,0 +1,2 @@
+_exploitdog_agent_system_group: "{{ 'root' if exploitdog_agent_root_privileges else 'exploitdog-agent' }}"
+_exploitdog_agent_system_user: "{{ _exploitdog_agent_system_group }}"
