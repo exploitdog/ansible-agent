@@ -40,7 +40,8 @@ Default size of log file rotation is 5mb, directory can contain maximum 10 log f
 | net-port      | ✔               | information about open ports                               |
 | package       | ✔               | Information about installed packages                       |
 | audit         |                 | Audit, configuration assessment (requires root privileges) |
-| baseboard     |                 | Information about baseboard                                |
+| baseboard     |                 | Information about baseboard (requires root privileges)     |
+| bios          |                 | Information about BIOS  (requires root privileges)         |
 
 ## Example
 
