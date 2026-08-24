@@ -9,6 +9,10 @@ below.
 |----------------------------------------|--------------------------|----------------------------------------------------------------------------------------------------------------|
 | `exploitdog_agent_url`                 | "https://exploitdog.com" | Url Address                                                                                                    |
 | `exploitdog_agent_token`               | ""                       | Agent token                                                                                                    |
+| `exploitdog_agent_version`             | "1.7.0"                  | Agent version to download from the update center                                                               |
+| `exploitdog_agent_build`               | ""                       | Optional: select a build by its build number instead of `exploitdog_agent_version`                             |
+| `exploitdog_sa_client_id`              | ""                       | Required: service account client id used to obtain the download token                                          |
+| `exploitdog_sa_client_secret`          | ""                       | Required: service account client secret used to obtain the download token                                      |
 | `exploitdog_agent_proxy`               | ""                       | Url proxy, must be supported [http connect](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) |
 | `exploitdog_agent_duration`            | "8h"                     | Frequency of data collection, '4h', '8h', '16h', '24h'                                                         |
 | `exploitdog_agent_enabled_collectors`  | []                       | List of additionally enabled collectors. It adds collectors to those enabled by default                        |
@@ -67,3 +71,11 @@ The preferred way of locally testing the role is to use Docker
 and [molecule](https://github.com/ansible-community/molecule) (v3.x). You will have to install Docker on your system.
 See "Get started" for a Docker package suitable for your system. Running your tests is as simple as
 executing `molecule test`.
+
+The molecule playbook reads credentials from environment variables:
+
+```bash
+SA_CLIENT_ID=... SA_CLIENT_SECRET=... AGENT_TOKEN=... molecule test
+```
+
+`AGENT_URL` is optional and defaults to `https://exploitdog.com`.
