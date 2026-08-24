@@ -41,9 +41,77 @@
     group: "{{ _exploitdog_agent_system_group }}"
     mode: 0751
 
+- name: Get exploitdog service account token
+  delegate_to: localhost
+  become: false
+  uri:
+    url: "{{ exploitdog_agent_url }}/api/v1/oauth/token"
+    method: POST
+    body_format: "json"
+    status_code: 200
+    body: |
+      {
+        "grant_type": "client_credentials",
+        "client_id": "{{ exploitdog_sa_client_id }}",
+        "client_secret": "{{ exploitdog_sa_client_secret }}"
+      }
+  register: exploitdog_sa_token
+
+- name: Get Agent builds
+  delegate_to: localhost
+  become: false
+  uri:
+    url: "{{ exploitdog_agent_url }}/api/v1/update-center/builds?name=agent"
+    method: GET
+    status_code: 200
+    headers:
+      Authorization: "Bearer {{ exploitdog_sa_token.json.access_token }}"
+  register: exploitdog_agent_builds
+
+- name: Set _arch (deb architecture)
+  set_fact:
+    _arch: "{{ [ansible_architecture] | map('extract', _deb_architecture) | first }}"
+
+- name: Set exploitdog_agent_build_id by version
+  set_fact:
+    exploitdog_agent_build_id: >-
+      {{ exploitdog_agent_builds.json.data
+         | selectattr('os', 'equalto', ansible_system | lower)
+         | selectattr('arch', 'equalto', _arch)
+         | selectattr('version', 'equalto', exploitdog_agent_version)
+         | map(attribute='id') | first | default('') }}
+  when: exploitdog_agent_build is not defined
+
+- name: Set exploitdog_agent_build_id by build
+  set_fact:
+    exploitdog_agent_build_id: >-
+      {{ exploitdog_agent_builds.json.data
+         | selectattr('os', 'equalto', ansible_system | lower)
+         | selectattr('arch', 'equalto', _arch)
+         | selectattr('build', 'equalto', exploitdog_agent_build)
+         | map(attribute='id') | first | default('') }}
+  when: exploitdog_agent_build is defined
+
+- name: Assert that a matching agent build was found
+  assert:
+    that: exploitdog_agent_build_id | default('') | length > 0
+    fail_msg: >-
+      No agent build found in the update center for
+      version={{ exploitdog_agent_version }} os={{ ansible_system | lower }} arch={{ _arch }}
+      {% if exploitdog_agent_build is defined %}build={{ exploitdog_agent_build }}{% endif %}.
+
+- name: Get exploitdog agent binary
+  delegate_to: localhost
+  become: false
+  get_url:
+    url: "{{ exploitdog_agent_url }}/api/v1/update-center/builds/{{ exploitdog_agent_build_id }}"
+    dest: /tmp/exploitdog_agent_{{ ansible_system | lower }}_{{_arch}}
+    headers:
+      Authorization: "Bearer {{ exploitdog_sa_token.json.access_token }}"
+
 - name: Copy exploitdog_agent binary
   copy:
-    src: bin/agent_linux_amd64
+    src: /tmp/exploitdog_agent_{{ ansible_system | lower }}_{{_arch}}
     dest: "{{ _exploitdog_agent_binary_install_dir }}/exploitdog_agent"
     mode: 0755
   notify: "restart exploitdog_agent"
