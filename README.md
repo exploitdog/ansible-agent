@@ -46,6 +46,7 @@ Default size of log file rotation is 5mb, directory can contain maximum 10 log f
 | audit         |                 | Audit, configuration assessment (requires root privileges) |
 | baseboard     |                 | Information about baseboard (requires root privileges)     |
 | bios          |                 | Information about BIOS  (requires root privileges)         |
+| imginspect    |                 | Container images (requires access to the runtime socket)   |
 
 ## Example
 
@@ -64,18 +65,3 @@ Use it in a playbook as follows:
 ```bash
 ansible-playbook -i ./inventory ./agent.yaml --extra-vars='uninstall=true'
 ```
-
-## Local Testing
-
-The preferred way of locally testing the role is to use Docker
-and [molecule](https://github.com/ansible-community/molecule) (v3.x). You will have to install Docker on your system.
-See "Get started" for a Docker package suitable for your system. Running your tests is as simple as
-executing `molecule test`.
-
-The molecule playbook reads credentials from environment variables:
-
-```bash
-SA_CLIENT_ID=... SA_CLIENT_SECRET=... AGENT_TOKEN=... molecule test
-```
-
-`AGENT_URL` is optional and defaults to `https://exploitdog.com`.
