@@ -9,6 +9,11 @@
     mode: "{{ lookup('vars', '_exploitdog_agent_' + ansible_service_mgr + '_service').mode }}"
   notify: "restart exploitdog_agent"
 
+- import_tasks: imginspect.yml
+  when:
+    - "'imginspect' in exploitdog_agent_enabled_collectors"
+    - not exploitdog_agent_root_privileges
+
 - name: Copy config file
   template:
     src: "exploitdog_agent.config.j2"

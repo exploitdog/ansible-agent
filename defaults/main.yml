@@ -26,3 +26,9 @@ exploitdog_agent_duration: "8h"
 exploitdog_agent_log_type: "file"
 exploitdog_agent_log_level: "info"
 exploitdog_agent_root_privileges: false
+
+# Container runtime sockets probed by imginspect (paths are hard-coded in the agent).
+_exploitdog_agent_runtime_sockets:
+  - /var/run/docker.sock
+  - /run/containerd/containerd.sock
+  - /run/podman/podman.sock
