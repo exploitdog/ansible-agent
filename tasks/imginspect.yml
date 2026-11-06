@@ -1,0 +1,49 @@
+---
+# imginspect reads images through the docker/containerd/podman sockets. Without root
+# the agent gets access only via the socket's owning group; sockets owned by group
+# root (containerd and rootful podman by default) cannot be granted this way.
+
+- name: Stat container runtime sockets
+  stat:
+    path: "{{ item }}"
+    follow: true
+  loop: "{{ _exploitdog_agent_runtime_sockets }}"
+  loop_control:
+    label: "{{ item }}"
+  register: _exploitdog_agent_runtime_socket_stats
+
+- name: Set found container runtime sockets
+  set_fact:
+    _exploitdog_agent_runtime_sockets_found: >-
+      {{ _exploitdog_agent_runtime_socket_stats.results
+         | selectattr('stat.exists')
+         | selectattr('stat.issock')
+         | map(attribute='stat') | list }}
+    _exploitdog_agent_runtime_socket_groups: >-
+      {{ _exploitdog_agent_runtime_socket_stats.results
+         | selectattr('stat.exists')
+         | selectattr('stat.issock')
+         | map(attribute='stat.gr_name')
+         | reject('equalto', 'root')
+         | unique | list }}
+
+- name: Add the exploitdog_agent user to container runtime socket groups
+  user:
+    name: "{{ _exploitdog_agent_system_user }}"
+    groups: "{{ _exploitdog_agent_runtime_socket_groups }}"
+    append: true
+  when: _exploitdog_agent_runtime_socket_groups | length > 0
+  notify: "restart exploitdog_agent"
+
+- name: Warn about container runtime sockets not reachable without root
+  debug:
+    msg: >-
+      imginspect cannot read
+      {{ _exploitdog_agent_runtime_sockets_found | selectattr('gr_name', 'equalto', 'root') | map(attribute='path') | join(', ') }}
+      (group root). Set exploitdog_agent_root_privileges=true or grant the socket to a group
+  when: _exploitdog_agent_runtime_sockets_found | selectattr('gr_name', 'equalto', 'root') | list | length > 0
+
+- name: Warn when no container runtime socket is found
+  debug:
+    msg: "imginspect is enabled but no container runtime socket was found on the host."
+  when: _exploitdog_agent_runtime_sockets_found | length == 0

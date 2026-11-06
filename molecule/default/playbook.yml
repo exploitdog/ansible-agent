@@ -4,3 +4,7 @@
   roles:
     - exploitdog.exploitdog_agent
   vars:
+    exploitdog_agent_url: "{{ lookup('env', 'AGENT_URL') | default('https://exploitdog.com', true) }}"
+    exploitdog_agent_token: "{{ lookup('env', 'AGENT_TOKEN') }}"
+    exploitdog_sa_client_id: "{{ lookup('env', 'SA_CLIENT_ID') }}"
+    exploitdog_sa_client_secret: "{{ lookup('env', 'SA_CLIENT_SECRET') }}"

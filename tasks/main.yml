@@ -27,7 +27,7 @@
     name: exploitdog_agent
     enabled: true
     state: started
-  when: ansible_service_mgr != 'systemd' and not ansible_check_mode and uninstall == false
+  when: ansible_facts['service_mgr'] != 'systemd' and not ansible_check_mode and uninstall == false
   tags:
     - exploitdog_agent_run
 
@@ -38,6 +38,6 @@
     name: exploitdog_agent
     enabled: true
     state: started
-  when: ansible_service_mgr == 'systemd' and not ansible_check_mode and uninstall == false
+  when: ansible_facts['service_mgr'] == 'systemd' and not ansible_check_mode and uninstall == false
   tags:
     - exploitdog_agent_run

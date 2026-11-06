@@ -5,7 +5,7 @@
     name: exploitdog_agent
     state: stopped
     enabled: no
-  when: ansible_service_mgr == 'systemd' and not ansible_check_mode
+  when: ansible_facts['service_mgr'] == 'systemd' and not ansible_check_mode
 
 - name: Stop exploitdog_agent service
   become: true
@@ -13,12 +13,12 @@
     name: exploitdog_agent
     state: stopped
     enabled: no
-  when: ansible_service_mgr != 'systemd' and not ansible_check_mode
+  when: ansible_facts['service_mgr'] != 'systemd' and not ansible_check_mode
 
 - name: Delete service file
   file:
     state: absent
-    path: "{{ lookup('vars', '_exploitdog_agent_' + ansible_service_mgr + '_service').file }}"
+    path: "{{ lookup('vars', '_exploitdog_agent_' + ansible_facts['service_mgr'] + '_service').file }}"
 
 - name: Delete log
   file:

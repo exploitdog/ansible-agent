@@ -11,12 +11,24 @@ _exploitdog_agent_upstart_service:
   file: "/etc/init/exploitdog_agent.conf"
   mode: "0644"
 
+_deb_architecture: {
+    "aarch64": "arm64",
+    "x86_64": "amd64"
+  }
+
 exploitdog_agent_disabled_collectors: []
 exploitdog_agent_enabled_collectors: []
 exploitdog_agent_url: "https://exploitdog.com"
+exploitdog_agent_version: "1.7.0"
 exploitdog_agent_proxy: ~
 exploitdog_agent_token: ~
 exploitdog_agent_duration: "8h"
 exploitdog_agent_log_type: "file"
 exploitdog_agent_log_level: "info"
 exploitdog_agent_root_privileges: false
+
+# Container runtime sockets probed by imginspect (paths are hard-coded in the agent).
+_exploitdog_agent_runtime_sockets:
+  - /var/run/docker.sock
+  - /run/containerd/containerd.sock
+  - /run/podman/podman.sock

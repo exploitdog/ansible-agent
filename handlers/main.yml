@@ -6,7 +6,7 @@
     name: exploitdog_agent
     state: restarted
   listen: "restart exploitdog_agent"
-  when: ansible_service_mgr == 'systemd' and not ansible_check_mode
+  when: ansible_facts['service_mgr'] == 'systemd' and not ansible_check_mode
 
 - name: Restart exploitdog_agent service
   become: true
@@ -14,4 +14,4 @@
     name: exploitdog_agent
     state: restarted
   listen: "restart exploitdog_agent"
-  when: ansible_service_mgr != 'systemd' and not ansible_check_mode
+  when: ansible_facts['service_mgr'] != 'systemd' and not ansible_check_mode

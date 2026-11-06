@@ -9,6 +9,10 @@ below.
 |----------------------------------------|--------------------------|----------------------------------------------------------------------------------------------------------------|
 | `exploitdog_agent_url`                 | "https://exploitdog.com" | Url Address                                                                                                    |
 | `exploitdog_agent_token`               | ""                       | Agent token                                                                                                    |
+| `exploitdog_agent_version`             | "1.7.0"                  | Agent version to download from the update center                                                               |
+| `exploitdog_agent_build`               | ""                       | Optional: select a build by its build number instead of `exploitdog_agent_version`                             |
+| `exploitdog_sa_client_id`              | ""                       | Required: service account client id used to obtain the download token                                          |
+| `exploitdog_sa_client_secret`          | ""                       | Required: service account client secret used to obtain the download token                                      |
 | `exploitdog_agent_proxy`               | ""                       | Url proxy, must be supported [http connect](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/CONNECT) |
 | `exploitdog_agent_duration`            | "8h"                     | Frequency of data collection, '4h', '8h', '16h', '24h'                                                         |
 | `exploitdog_agent_enabled_collectors`  | []                       | List of additionally enabled collectors. It adds collectors to those enabled by default                        |
@@ -42,6 +46,17 @@ Default size of log file rotation is 5mb, directory can contain maximum 10 log f
 | audit         |                 | Audit, configuration assessment (requires root privileges) |
 | baseboard     |                 | Information about baseboard (requires root privileges)     |
 | bios          |                 | Information about BIOS  (requires root privileges)         |
+| imginspect    |                 | Container images (requires access to the runtime socket)   |
+
+### imginspect
+
+The collector reads images through the docker, containerd and podman sockets. When `imginspect` is listed in
+`exploitdog_agent_enabled_collectors` and `exploitdog_agent_root_privileges` is `false`, the role checks which of
+`/var/run/docker.sock`, `/run/containerd/containerd.sock` and `/run/podman/podman.sock` exist on the host and adds the
+agent user to the group owning each socket (for example `docker`; note that the `docker` group is equivalent to root on
+that host). Sockets owned by group `root` (containerd and rootful
+podman by default) cannot be granted this way: the role prints a warning, and you need either
+`exploitdog_agent_root_privileges: true` or a socket group configured on the host.
 
 ## Example
 
@@ -60,10 +75,3 @@ Use it in a playbook as follows:
 ```bash
 ansible-playbook -i ./inventory ./agent.yaml --extra-vars='uninstall=true'
 ```
-
-## Local Testing
-
-The preferred way of locally testing the role is to use Docker
-and [molecule](https://github.com/ansible-community/molecule) (v3.x). You will have to install Docker on your system.
-See "Get started" for a Docker package suitable for your system. Running your tests is as simple as
-executing `molecule test`.
